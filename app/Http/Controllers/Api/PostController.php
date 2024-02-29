@@ -10,9 +10,14 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
+    use ApiResponseTrait;
+    
     public function index(){
+
         $posts = Category::get();
-        $mg = ['hossam'];
-        return response($posts , 200 ,$mg );
+
+       return $this->ApiResponse($posts , 'ok' , 200);
+        
     }
 }

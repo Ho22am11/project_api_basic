@@ -20,4 +20,13 @@ class PostController extends Controller
        return $this->ApiResponse($posts , 'ok' , 200);
         
     }
+
+    public function show($id){
+        $posts = User::find($id);
+
+        if($posts){
+            return $this->ApiResponse($posts , 'ok' , 200);
+        }
+        return $this->ApiResponse( null , 'not found' , 401);
+    }
 }

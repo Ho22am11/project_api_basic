@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -38,6 +39,18 @@ class PostController extends Controller
     }
 
     public function store(Request $request){
+
+        $validator = Validator::make($request->all() ,
+        [
+            'title' => 'required' ,
+            'body' => 'required' ,
+        ]);
+
+        if($validator->fails()){
+            return $this->ApiResponse( null , $validator->errors() , 400);
+        }
+
+
 
         $post = Post::create($request->all());
 

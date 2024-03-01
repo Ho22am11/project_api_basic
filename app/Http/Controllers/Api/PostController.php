@@ -61,4 +61,33 @@ class PostController extends Controller
         return $this->ApiResponse( null , 'the post not stored' , 400);
 
     }
+
+    public function update(Request $request , $id)
+    {
+        $validator = Validator::make($request->all() ,
+        [
+            'title' => 'required' ,
+            'body' => 'required' ,
+        ]);
+
+        if($validator->fails()){
+            return $this->ApiResponse(null , $validator->errors() , 201 );
+        }
+
+        $post = Post::find($id);
+
+        if(!$post){
+            return $this->ApiResponse( null , 'not found' , 401);
+        }
+
+
+        $post->update($request->all());
+
+        if($post){
+            return $this->ApiResponse(new PostResource($post) , 'the post update' , 201);
+        }
+
+        return $this->ApiResponse( null , 'the post not stored' , 400);
+
+    }
 }

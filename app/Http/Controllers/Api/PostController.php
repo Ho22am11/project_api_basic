@@ -28,11 +28,24 @@ class PostController extends Controller
     public function show($id){
 
         // for controller of data get
-        $posts = new PostResource(User::find($id));
+        $posts = User::find($id);
 
         if($posts){
-            return $this->ApiResponse($posts , 'ok' , 200);
+            // for solve error not found
+            return $this->ApiResponse(new PostResource($posts) , 'ok' , 200);
         }
         return $this->ApiResponse( null , 'not found' , 401);
+    }
+
+    public function store(Request $request){
+
+        $post = Post::create($request->all());
+
+        if($post){
+            return $this->ApiResponse(new PostResource($post) , 'the post stored' , 201);
+        }
+
+        return $this->ApiResponse( null , 'the post not stored' , 400);
+
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
@@ -15,14 +16,19 @@ class PostController extends Controller
     
     public function index(){
 
-        $posts = Category::get();
+
+        //for collection data is deffrant
+
+        $posts = PostResource::collection(User::get()) ;
 
        return $this->ApiResponse($posts , 'ok' , 200);
         
     }
 
     public function show($id){
-        $posts = User::find($id);
+
+        // for controller of data get
+        $posts = new PostResource(User::find($id));
 
         if($posts){
             return $this->ApiResponse($posts , 'ok' , 200);

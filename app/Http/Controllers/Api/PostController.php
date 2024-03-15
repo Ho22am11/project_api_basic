@@ -20,16 +20,16 @@ class PostController extends Controller
 
         //for collection data is deffrant
 
-        $posts = PostResource::collection(User::get()) ;
+        $posts = PostResource::collection(Post::get());
 
-       return $this->ApiResponse($posts , 'ok' , 200);
-        
+        return $this->ApiResponse($posts , 'ok' ,200);
+         
     }
 
     public function show($id){
 
         // for controller of data get
-        $posts = User::find($id);
+        $posts = Post::find($id);
 
         if($posts){
             // for solve error not found
@@ -89,5 +89,12 @@ class PostController extends Controller
 
         return $this->ApiResponse( null , 'the post not stored' , 400);
 
+    }
+
+
+    public function delete($id){
+
+        Post::destroy($id);
+        return $this->ApiResponse(null , 'delete succesess' , 202);
     }
 }

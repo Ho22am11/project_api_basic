@@ -22,23 +22,29 @@ class AuthController extends Controller
     public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+   
     public function login(Request $request){
-    	$validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+
+        try {
+            $credentials = request(['email', 'password']);
+        $token = Auth::guard("api")->attempt($credentials);
+
+        if (!$token) {
+            return response()->json(['error' => 'Unauthorized']);
         }
-        if (! $token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+
+        $user = Auth::guard("api")->user();
+        $user->token = $token ;
+        return response()->json(['msg' => $user ]);
+
+
+        return $this->respondWithToken($token);
+        }catch (\Exception $e){
+            return $e->getMessage();
         }
-        return $this->createNewToken($token);
+
+     //   return response()->json(['msg' => 'not found']);
+        
     }
     /**
      * Register a User.
